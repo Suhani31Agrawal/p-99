@@ -7,9 +7,9 @@ def main():
     deleted_folders_count=0
     deleted_files_count=0
 
-    path="/PATH_TO_DELETE"
+    path="/Users/skmaity/Downloads/Python_class"
 
-    days=30
+    days=0
 
     seconds=time.time()-(days*24*60*60)
 
@@ -20,7 +20,7 @@ def main():
             if seconds >= get_file_or_folder_age(root_folder):
                 
                 remove_folder(root_folder)
-                deleted_folders_count+=1
+                deleted_folders_count += 1
 
                 break
 
@@ -28,45 +28,66 @@ def main():
 
                 for folder in folders:
 
-                    folder_path=os.path.join(root_folder,folder)
+                    folder_path = os.path.join(root_folder,folder)
 
                     if seconds >= get_file_or_folder_age(folder_path):
 
+                        remove_folder(folder_path)
+                        deleted_folders_count += 1
+
+                for file in files:
+
+                    file_path = os.path.join(root_folder, file)
+
+                    if seconds >= get_file_or_folder_age(file_path):
+
                         remove_file(file_path)
-                        deleted_files_count += 1
+                        deleted_files_count += 1 
 
-            else:
+                    else:
 
-                print(f'"{path}" is not found')
-                deleted_files_count += 1
+                        if seconds >= get_file_or_folder_age(path):
 
-            print(f"Total folders deleted:{deleted_folders_count}")
-            print(f"Total files deleted: {deleted_files_count}")
+                            remove_file(path)
+                            deleted_files_count += 1 
 
-        def remove_folder(path):
+    else:
 
-            if not shutil.rmtree(path):
+        print(f'"{path}" is not found')
+        deleted_files_count += 1
 
-                print(f"{path} is removed successfully")
+    print(f"Total folders deleted:{deleted_folders_count}")
+    print(f"Total files deleted: {deleted_files_count}")
 
-            else:
 
-                print(f"Unable to delete the"+path)
+def remove_folder(path):
 
-        def remove_file(path):
+    if not shutil.rmtree(path):
 
-            if not os.remove(path):
+        print(f"{path} is removed successfully")
 
-                print(f"{path} is removed successfully")
+    else:
 
-            else:
+        print(f"Unable to delete the"+path)
 
-                print(f"Unable to delete the"+path)
 
-        def get_file_or_folder_age(path):
+def remove_file(path):
 
-            ctime=os.stat(path).st_ctime
+    if not os.remove(path):
 
-            return ctime
+        print(f"{path} is removed successfully")
 
-        
+    else:
+
+        print(f"Unable to delete the"+path)
+
+
+def get_file_or_folder_age(path):
+
+    ctime=os.stat(path).st_ctime
+
+    return ctime
+
+
+if __name__ == '__main__':
+	main()
